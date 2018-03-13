@@ -1,6 +1,9 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
 import enums.Cards;
@@ -11,7 +14,9 @@ public class Game {
 	//Atributos
 	public ArrayList<Card> deck = new ArrayList<Card>();
 	public ArrayList<Player> players = new ArrayList<Player>();
-	public int turn;
+	public Player turn;
+	Scanner scanner = new Scanner (System.in);
+	
 	//Construtores
 	public Game() {
 		for (int number = 0; number < 13; number++) {
@@ -23,7 +28,7 @@ public class Game {
 	
 	// Metodos
 	public void Start() {
-		int playerRandom = ThreadLocalRandom.current().nextInt(0, players.size());
+		turn = players.get(ThreadLocalRandom.current().nextInt(0, players.size()));
 		System.out.println("O Jogo está sendo caregado... \n");
 		
 		//Informações dos jogadores:
@@ -32,10 +37,20 @@ public class Game {
 		}
 		
 		//Quem começa (Jogador escolhido é o responsável por cortar o baralho e escolher se vai subir ou descer)
-		System.out.println("Jogador escolhido aleatoriamente: "+players.get(playerRandom).getName());
-		this.turn = playerRandom;
+		System.out.println("Jogador escolhido aleatoriamente: "+turn.getName());
+
+				//Embaralha e corta o baralho e decide se sobe ou desce.
+		//Embaralha o baralho
+		System.out.println("O baralho está sendo embaralhado...");
+		Collections.shuffle(deck);
 		
-		//Embaralha e corta o baralho e decide se sobe ou desce.
+		//Cortando o baralho
+		System.out.println("O jogador responsável por cortar o baralho: "+turn.getName());
+		if (turn.isHuman()) {
+			System.out.println("Escolha entre: topo, centro ou inferior.");
+			scanner.nextLine();
+		}
+		
 		
 		
 		//Distribui as cartas
@@ -48,10 +63,15 @@ public class Game {
 	}
 	
 	public void Turn() {
-		Player player = players.get(turn);
-		System.out.println("Turno de: "+player.getName());
-		if (player.isHuman()) {
+		System.out.println("Turno de: "+turn.getName());
+		if (turn.isHuman()) {
 			System.out.println("Escolha uma carta para jogar -> ");
+		}
+	}
+	
+	public void Cut(String cut) {
+		for (int i = 0; i < deck.size(); i++) {
+			
 		}
 	}
 	

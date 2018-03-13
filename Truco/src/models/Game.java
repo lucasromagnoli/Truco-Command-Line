@@ -2,9 +2,10 @@ package models;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
+
+import javax.swing.JOptionPane;
 
 import enums.Cards;
 import enums.Suits;
@@ -19,11 +20,7 @@ public class Game {
 	
 	//Construtores
 	public Game() {
-		for (int number = 0; number < 13; number++) {
-			for (int suits = 0; suits < 4; suits++) {
-				this.deck.add(new Card(Cards.values()[number],Suits.values()[suits]));
-			}
-		}
+		createDeck();
 	}
 	
 	// Metodos
@@ -39,7 +36,6 @@ public class Game {
 		//Quem começa (Jogador escolhido é o responsável por cortar o baralho e escolher se vai subir ou descer)
 		System.out.println("Jogador escolhido aleatoriamente: "+turn.getName());
 
-				//Embaralha e corta o baralho e decide se sobe ou desce.
 		//Embaralha o baralho
 		System.out.println("O baralho está sendo embaralhado...");
 		Collections.shuffle(deck);
@@ -48,13 +44,16 @@ public class Game {
 		System.out.println("O jogador responsável por cortar o baralho: "+turn.getName());
 		if (turn.isHuman()) {
 			System.out.println("Escolha entre: topo, centro ou inferior.");
-			scanner.nextLine();
+			Cut(scanner.nextLine().toLowerCase());
+			
+		} else {
+			Cut(ThreadLocalRandom.current().nextInt(0,1) == 0 ? "topo" : ThreadLocalRandom.current().nextInt(0,1) == 1 ? "centro" : "inferior");
 		}
 		
 		
 		
 		//Distribui as cartas
-		players.get(1).hand.add(deck.get(51));
+		players.get(1).hand.add(deck.get(1));
 		System.out.println(players.get(1).hand.get(0));
 		
 		//Vira uma carta na mesa
@@ -70,8 +69,23 @@ public class Game {
 	}
 	
 	public void Cut(String cut) {
+		JOptionPane.showMessageDialog(null, cut);
 		for (int i = 0; i < deck.size(); i++) {
-			
+			if (cut.equals("topo") && i < 11) {
+				deck.remove(i);
+			} else if (cut.equals("centro") && i > 11 && i < 23) {
+				deck.remove(i);
+			} else if (cut.equals("inferior") && i > 40) {
+				deck.remove(i);
+			}
+		}
+	}
+	
+	public void createDeck() {
+		for (int number = 0; number < 13; number++) {
+			for (int suits = 0; suits < 4; suits++) {
+				this.deck.add(new Card(Cards.values()[number],Suits.values()[suits]));
+			}
 		}
 	}
 	
